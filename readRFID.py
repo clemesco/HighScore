@@ -1,36 +1,37 @@
 import subprocess
 import creditor as cd
 import csv
-import datetime, time
-
+import datetime
+import time
 
 
 def addToDatabase(idCard):
 
-        t = datetime.datetime.now()
+    t = datetime.datetime.now() 
 
-        isAlready = False
-        output = idCard.translate(table)
-        if output != "":
-            with open('IDs.csv', 'r+') as f:
-                csv_reader = csv.reader(f, delimiter=',')
-                for row in csv_reader:
-                    if row[0] == output:
-                        isAlready = True
-                        print(output +
-                            " is already in the database. Skipping")
-                        break
-                    else:
-                        isAlready = False
-            if isAlready == False:
-                
-                with open('IDs.csv', 'a+', newline='') as f:
-                    csv_writer = csv.writer(f, delimiter=',')
-                    csv_writer.writerow([output, 2, time.mktime(t.timetuple())])
-                    print(output + " added to the database.") 
+    isAlready = False
+    output = idCard.translate(table)
+    if output != "":
+        with open('IDs.csv', 'r+') as f:
+            csv_reader = csv.reader(f, delimiter=',')
+            for row in csv_reader:
+                if row[0] == output:
+                    isAlready = True
+                    print(output +
+                          " is already in the database. Skipping")
+                    break
+                else:
+                    isAlready = False
+        if isAlready == False:
 
-                #Update the database for conversion to list
-                cd.userList = cd.updateUserList()
+            with open('IDs.csv', 'a+', newline='') as f:
+                csv_writer = csv.writer(f, delimiter=',')
+                csv_writer.writerow([output, 2, time.mktime(t.timetuple())])
+                print(output + " added to the database.")
+
+            # Update the database for conversion to list
+        cd.userList = cd.updateUserList()
+
 
 print("Starting RFID Card Reader")
 
@@ -50,7 +51,6 @@ for idCard in task.stdout:
     if idCard.translate(table) != "":
         addToDatabase(idCard)
         cd.processCard(idCard)
-        
-        
 
-#task.wait()
+
+# task.wait()

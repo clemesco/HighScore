@@ -51,10 +51,12 @@ def updateCSV():
         wr = csv.writer(f, lineterminator='\n', delimiter=',')
         for val in userList:
             wr.writerow(val)
+        print('Updated CSV')
 
 
 def creditGame():
     keyboard.press(Key.space)
+    time.sleep(0.5)
     keyboard.release(Key.space)
 
 
