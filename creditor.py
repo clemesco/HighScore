@@ -3,9 +3,13 @@ import datetime
 import time
 from pynput.keyboard import Key, Controller
 
+creditsPerCycle = 2
+numberOfHours = 2
+
+#Initiate keyboard for credit input once in-game
 keyboard = Controller()
 
-
+#Get user database as list
 def updateUserList():
     with open('IDs.csv', 'r+') as f:
         reader = csv.reader(f, delimiter=',')
@@ -15,14 +19,14 @@ def updateUserList():
 
 userList = updateUserList()
 
-
+#Get the csv row for specific user
 def getRow(idCard):
     for row in userList:
         # print(row[0])
         if row[0] == idCard:
             return row
 
-
+#Reload account if x amount of seconds went by
 def reloadAccount(idCard, timeInSceonds, creditCount):
     row = getRow(idCard)
     t1 = datetime.datetime.now()
@@ -33,7 +37,7 @@ def reloadAccount(idCard, timeInSceonds, creditCount):
         row[2] = t1
         print('Reloaded account !')
 
-
+#Approve credit request if user has enough credits
 def approve(idCard):
     row = getRow(idCard)
     creditNumber = int(row[1])
@@ -45,7 +49,7 @@ def approve(idCard):
         print("You are out of credits. Please wait until your credits are back !")
         return False
 
-
+#Rewrite database
 def updateCSV():
     with open("IDs.csv", 'w') as f:
         wr = csv.writer(f, lineterminator='\n', delimiter=',')
@@ -53,15 +57,15 @@ def updateCSV():
             wr.writerow(val)
         print('Updated CSV')
 
-
+#Press key to credit once in-game
 def creditGame():
     keyboard.press(Key.space)
     time.sleep(0.5)
     keyboard.release(Key.space)
 
-
+#Main process function
 def processCard(idCard):
-    reloadAccount(idCard, 3600, 2)
+    reloadAccount(idCard, numberOfHours*3600, creditsPerCycle)
     okForCredit = approve(idCard)
     if okForCredit:
         creditGame()

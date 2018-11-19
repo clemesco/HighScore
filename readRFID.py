@@ -4,7 +4,7 @@ import csv
 import datetime
 import time
 
-
+#Add RFID tag to database if not already present
 def addToDatabase(idCard):
 
     t = datetime.datetime.now() 
@@ -35,6 +35,7 @@ def addToDatabase(idCard):
 
 print("Starting RFID Card Reader")
 
+#Opening terminal process
 task = subprocess.Popen(
     ['sudo', 'cat', '/dev/ttyUSB0'], stdout=subprocess.PIPE)
 print("Beginning Reading")
