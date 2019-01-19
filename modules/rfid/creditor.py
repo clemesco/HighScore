@@ -81,7 +81,6 @@ def processCard(idCard):
     reloadAccount(idCard, numberOfHours*3600, creditsPerCycle)
     okForCredit = approve(idCard)
     if okForCredit == True and debug == False:
-        
         creditGame()
     updateCSV()
     return okForCredit

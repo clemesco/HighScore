@@ -23,7 +23,7 @@ for idCard in task.stdout:
     if idCard != "" and len(idCard) >= 10:
         rfidR.addToDatabase(idCard)
         cd.processCard(idCard)
-    print("\n"*3)
+        print("\n"*3)
 
 
 # task.wait()
