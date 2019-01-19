@@ -15,15 +15,15 @@ print("Please, do a blank credit")
 
 
 for idCard in task.stdout:
+    #print("Passed")
     idCard = str(idCard)
     table = str.maketrans(dict.fromkeys("\\nb' "))
     idCard = idCard.translate(table)
 
-
     if idCard != "" and len(idCard) >= 10:
         rfidR.addToDatabase(idCard)
         cd.processCard(idCard)
-        print("\n"*3)
+        print("\n"*3)            
 
 
-# task.wait()
+# task.wait()      
