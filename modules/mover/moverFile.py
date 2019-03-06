@@ -6,62 +6,49 @@ import shutil
 from os import listdir
 from os.path import isfile, join
 
-permaRomPath = 'mover/permaRom/'
-tempRomPath = 'mover/tempRom/'
+class mover():
 
+    def __init__(self):
+        self.tempList = ['mslug3.zip', 'nbbatman.zip', 'rampage.zip']
+        self.moveFile = 'mover/movedGame.txt'
+        self.permaRomPath = 'mover/permaRom/'
+        self.tempRomPath = 'mover/tempRom/'
 
-def moveToTemp(gameFile):
-    shutil.move(os.path.abspath(permaRomPath) + '/' + gameFile,
-                os.path.abspath(tempRomPath) + '/' + gameFile)
-    print('Moved game to temp folder')
+    def moveToTemp(self, gameFile):
+        shutil.move(os.path.abspath(self.permaRomPath) + '/' + gameFile,
+                    os.path.abspath(self.tempRomPath) + '/' + gameFile)
 
+    def moveToPerm(self, gameFile):
+        shutil.move(os.path.abspath(self.tempRomPath) + '/' + gameFile,
+                    os.path.abspath(self.permaRomPath) + '/' + gameFile)
 
-def moveToPerm(gameFile):
-    shutil.move(os.path.abspath(tempRomPath) + '/' + gameFile,
-                os.path.abspath(permaRomPath) + '/' + gameFile)
-    print('Moved game to perm folder')
+    def directoryToList(self, romPath):
+        onlyfiles = [f for f in listdir(romPath) if isfile(join(romPath, f))]
+        return onlyfiles
 
+    def saveMovedGame(self, gameFile, i):
+        with open(self.moveFile, 'w') as f:
+            f.write(str(i) + gameFile)
 
-def directoryToList(romPath):
-    onlyfiles = [f for f in listdir(romPath) if isfile(join(romPath, f))]
-    return onlyfiles
+    def getGameId(self):
+        with open(self.moveFile, 'r') as f:
+            id = f.read(1)
+        return id
 
+    def changeGame(self):
+        i = int(self.getGameId())
+        previousGame = self.tempList[i]
+        self.moveToTemp(previousGame)
 
-tempList = ['mslug3.zip', 'nbbatman.zip', 'rampage.zip']
+        nextGameId = i+1
 
+        if nextGameId > len(self.directoryToList(self.tempRomPath))-1:
+            nextGameId = 0
 
-def saveMovedGame(gameFile, i):
-    with open('mover/movedGame.txt', 'w') as f:
-        f.write(str(i) + gameFile)
-    print('Saved Game in text file')
+        self.saveMovedGame(self.tempList[nextGameId], nextGameId)
 
-
-def getGameId():
-    with open('mover/movedGame.txt', 'r') as f:
-        id = f.read(1)
-    return id
-
-
-def changeGame():
-    i = int(getGameId())
-    previousGame = tempList[i]
-    print('Previous game is:', previousGame)
-    moveToTemp(previousGame)
-
-    nextGameId = i+1
-
-    if nextGameId > len(directoryToList(tempRomPath))-1:
-        nextGameId = 0
-
-    saveMovedGame(tempList[nextGameId], nextGameId)
-
-    moveToPerm(tempList[nextGameId])
-    nextGame = tempList[int(getGameId())]
-    print('Next game is:', nextGame)
-    #os.system('killall attract')
-    os.system('attract --build-romlist mame -o mame')
-    #os.system('attract')
-
-    
-
-changeGame()
+        self.moveToPerm(self.tempList[nextGameId])
+        nextGame = self.tempList[int(self.getGameId())]
+        #os.system('killall attract')
+        os.system('attract --build-romlist mame -o mame')
+        # os.system('attract')
